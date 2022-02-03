@@ -3,3 +3,6 @@ Cargo.lock
 
 # vim swap files
 *.swp
+
+# doc folder is generated from autotest
+/doc
