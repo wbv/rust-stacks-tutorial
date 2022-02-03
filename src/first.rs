@@ -72,7 +72,7 @@ mod tests {
     use super::List;
 
     #[test]
-    fn basic_stack_tests() {
+    fn basic_stack() {
         let mut list = List::new();
 
         // Empty list behavior check
