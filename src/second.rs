@@ -44,13 +44,12 @@ impl<T> List<T> {
     }
 
 
-    /// Returns a reference to the first value from the [`List`] without removing it, as in [`pop`]
+    /// Returns a reference to the first value from the [`List`] without removing it.
     pub fn peek(&self) -> Option<&T> {
         self.head.as_ref().map(|node| &node.elem)
     }
 
-    /// Returns a mutable reference to the first value from the [`List`] without removing it, as in
-    /// [`pop`]
+    /// Returns a mutable reference to the first value from the [`List`] without removing it.
     pub fn peek_mut(&mut self) -> Option<&mut T> {
         self.head.as_mut().map(|node| &mut node.elem)
     }
