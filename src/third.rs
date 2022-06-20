@@ -25,7 +25,7 @@ impl<T> List<T> {
                 elem: elem,
                 next: self.head.clone(),
             }))
-        } 
+        }
     }
 
     /// Return the tail of a [`List`] which is every element besides the first element
@@ -39,7 +39,32 @@ impl<T> List<T> {
     pub fn head(&self) -> Option<&T> {
         self.head.as_ref().map(|node| &node.elem )
     }
+
+    pub fn iter(&self) -> Iter<'_, T> {
+        Iter { next: self.head.as_deref() }
+    }
 }
+
+
+//////////////////////////////
+// Iterator implementations //
+//////////////////////////////
+
+// Iter
+pub struct Iter<'a, T> {
+    next: Option<&'a Node<T>>
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.next.map(|node| {
+            self.next = node.next.as_deref();
+            &node.elem
+        })
+    }
+}
+
 
 
 ///////////
@@ -66,5 +91,16 @@ mod tests {
         let list = list.tail();
         assert_eq!(list.head(), None);
 
+    }
+
+    #[test]
+    fn iter() {
+        let list = List::new().prepend(1).prepend(2).prepend(3);
+        let expected = vec![Some(&3), Some(&2), Some(&1), None];
+
+        let mut iter = list.iter();
+        for val in expected {
+            assert_eq!(iter.next(), val);
+        }
     }
 }
