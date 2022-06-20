@@ -1,11 +1,11 @@
-use std::rc::Rc;
+use std::sync::Arc;
 
 /// This is an immutable linked list, like in a functional programming language.
 pub struct List<T> {
     head: Link<T>
 }
 
-type Link<T> = Option<Rc<Node<T>>>;
+type Link<T> = Option<Arc<Node<T>>>;
 
 struct Node<T> {
     elem: T,
@@ -21,7 +21,7 @@ impl<T> List<T> {
     /// Attach a new element `elem` to the front of a [`List`].
     pub fn prepend(&self, elem: T) -> List<T> {
         List {
-            head: Some(Rc::new(Node {
+            head: Some(Arc::new(Node {
                 elem: elem,
                 next: self.head.clone(),
             }))
@@ -45,6 +45,23 @@ impl<T> List<T> {
         Iter { next: self.head.as_deref() }
     }
 }
+
+/////////////////
+// Custom Drop //
+/////////////////
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        let mut cur_link = self.head.take();
+        while let Some(boxed_node) = cur_link {
+            if let Ok(mut node) = Arc::try_unwrap(boxed_node) {
+                cur_link = node.next.take();
+            } else {
+                break;
+            }
+        }
+    }
+}
+
 
 
 //////////////////////////////
