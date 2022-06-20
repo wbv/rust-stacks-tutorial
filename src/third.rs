@@ -13,12 +13,12 @@ struct Node<T> {
 }
 
 impl<T> List<T> {
-    /// Default, empty constructor for a [`List`]
+    /// Default, empty constructor for a [`List`].
     pub fn new() -> Self {
         List { head: None }
     }
 
-    /// Attach a new element `elem` to the front of a [`List`]
+    /// Attach a new element `elem` to the front of a [`List`].
     pub fn prepend(&self, elem: T) -> List<T> {
         List {
             head: Some(Rc::new(Node {
@@ -28,18 +28,19 @@ impl<T> List<T> {
         }
     }
 
-    /// Return the tail of a [`List`] which is every element besides the first element
+    /// Return the tail of a [`List`], which is every element besides the first element.
     pub fn tail(&self) -> List<T> {
         List {
             head: self.head.as_ref().and_then(|node| node.next.clone())
         }
     }
 
-    /// Return the head of a [`List`] which is the first element
+    /// Return the head of a [`List`], which is the first element.
     pub fn head(&self) -> Option<&T> {
         self.head.as_ref().map(|node| &node.elem )
     }
 
+    /// Return an [`Iter`] across a [`List`].
     pub fn iter(&self) -> Iter<'_, T> {
         Iter { next: self.head.as_deref() }
     }
